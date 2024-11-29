@@ -1,3 +1,10 @@
+# changes
+
+ - TRAIN.md example train
+ - load model/bug fixes
+ - config examples
+
+   
 <p align="center" style="border-radius: 10px">
   <img src="asset/logo.png" width="35%" alt="logo"/>
 </p>
@@ -236,9 +243,6 @@ bash train_scripts/train_local.sh \
     configs/sana_config/1024ms/Sana_1600M_img1024.yaml \
     --data.buckets_file=buckets.json \
     --train.train_batch_size=30
-
-# recoilme
-torchrun --nproc_per_node=1 train_scripts/train_local.py --config_path=configs/sana_config/1024ms/Sana_1600M_img1024_AdamW-ft.yaml --work_dir=output/debug3 --report_to=wandb --debug=false --data.buckets_file=buckets.json --tracker_project_name=sanaft --name=5
 ```
 
 Using the AdamW optimizer, training with a batch size of 30 on 1024x1024 resolution consumes ~48GB VRAM on an NVIDIA A6000 GPU.

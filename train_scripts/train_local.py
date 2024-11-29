@@ -553,6 +553,36 @@ def train(config, args, accelerator, model, optimizer, lr_scheduler, dataset, tr
 
             data_time_start = time.time()
 
+        if epoch % config.train.save_model_epochs == 0 or epoch == config.train.num_epochs and not config.debug:
+            accelerator.wait_for_everyone()
+            if accelerator.is_main_process:
+                # os.umask(0o000)
+                checkpoints_last = osp.join(config.work_dir, "checkpoints_last")
+                os.makedirs(checkpoints_last, exist_ok=True)
+                # Remove all old checkpoint files in the directory
+                for filename in os.listdir(checkpoints_last):
+                    file_path = osp.join(checkpoints_last, filename)
+                    if os.path.isfile(file_path):
+                        os.remove(file_path)
+                        
+                ckpt_saved_path = save_checkpoint(
+                    checkpoints_last,
+                    epoch=epoch,
+                    step=global_step,
+                    model=accelerator.unwrap_model(model),
+                    optimizer=optimizer,
+                    lr_scheduler=lr_scheduler,
+                    generator=generator,
+                    add_symlink=True,
+                )
+
+                online_metric_monitor_dir = osp.join(config.work_dir, config.train.online_metric_dir)
+                os.makedirs(online_metric_monitor_dir, exist_ok=True)
+                with open(f"{online_metric_monitor_dir}/{ckpt_saved_path.split('/')[-1]}.txt", "w") as f:
+                    f.write(osp.join(config.work_dir, "config.py") + "\n")
+                    f.write(ckpt_saved_path)
+            
+
         accelerator.wait_for_everyone()
 
 
