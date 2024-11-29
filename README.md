@@ -1,3 +1,10 @@
+# changes
+
+ - TRAIN.md example train
+ - load model/bug fixes
+ - config examples
+
+   
 <p align="center" style="border-radius: 10px">
   <img src="asset/logo.png" width="35%" alt="logo"/>
 </p>
