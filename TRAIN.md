@@ -16,9 +16,18 @@ huggingface-cli login
 cd /workspace
 wget https://huggingface.co/datasets/recoilme/ae/resolve/main/anime.zip
 apt install unzip
+unzip -q anime.zip
 rm anime.zip
 python /home/Sana/train_scripts/make_buckets.py --config=/home/Sana/configs/sana_config/512ms/Potato_600M_img512.yaml --data.data_dir=[/workspace/anime] --data.buckets_file=/workspace/anime.json
 
 # train new, potato model in bf16
-torchrun --nproc_per_node=1 /home/Sana/train_scripts/train_local.py --config_path=/home/Sana/configs/sana_config/512ms/Potato_600M_img512.yaml --data.buckets_file=/workspace/anime.json --name=tst
+torchrun --nproc_per_node=1 /home/Sana/train_scripts/train_local.py --config_path=/home/Sana/configs/sana_config/512ms/Potato_600M_img512.yaml --data.buckets_file=/workspace/anime.json --name=2
+
+# check result: https://wandb.ai/recoilme/potato/runs/2?nw=nwuserrecoilme
+# Feel the horror
+# save cp
+cp potato/checkpoints_last/epoch_60_step_1741.pth /workspace/potato.pth
+
+# continue train if you brave enough
+torchrun --nproc_per_node=1 /home/Sana/train_scripts/train_local.py --config_path=/home/Sana/configs/sana_config/512ms/Potato_600M_img512-finetune.yaml --data.buckets_file=/workspace/anime.json --name=3
 ```

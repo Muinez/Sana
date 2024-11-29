@@ -2,7 +2,7 @@ work_dir: /workspace/potato/
 report_to: wandb
 tracker_project_name: potato
 resume_from: null
-load_from: null
+load_from: /workspace/potato.pth
 debug: false
 caching: false
 # training setting
@@ -10,7 +10,7 @@ train:
   num_workers: 1
   seed: 1
   train_batch_size: 256
-  num_epochs: 60
+  num_epochs: 150
   gradient_accumulation_steps: 1
   grad_checkpointing: true
   gradient_clip: 0.1
@@ -22,17 +22,20 @@ train:
     betas: [0.9, 0.999]
   lr_schedule: constant
   lr_schedule_args:
-    num_warmup_steps: 100
+    num_warmup_steps: 300
   local_save_vis: false # if save log image locally
   visualize: true
-  eval_sampling_steps: 64
+  eval_sampling_steps: 256
   log_interval: 32
   save_model_epochs: 10
-  save_model_steps: 150
+  save_model_steps: 512
   work_dir: /workspace/potato
   online_metric: false
   eval_metric_step: 2000
   online_metric_dir: metric_helper
+  validation_prompts:
+    - 1girl
+    - 1girl, solo, animal ears, bow, teeth, jacket, tail, open mouth, brown hair, orange background, bowtie, orange nails, simple background, cat ears, orange eyes, blue bow, animal ear fluff, cat tail, looking at viewer, upper body, shirt, school uniform, hood, striped bow, striped, white shirt, black jacket, blue bowtie, fingernails, long sleeves, cat girl, bangs, fangs, collared shirt, striped bowtie, short hair, tongue, hoodie, sharp teeth, facial mark, claw pose
 # model config
 model:
   model: SanaMS_600M_P1_D28
